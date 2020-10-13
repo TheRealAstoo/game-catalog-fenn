@@ -1,4 +1,4 @@
-# Video-game templating
+# Video-games templating
 
 ## Usage
 

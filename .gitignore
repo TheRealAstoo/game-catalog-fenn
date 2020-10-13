@@ -1,5 +1,6 @@
-*.DS_store
-node_modules
-.env_vars
-yarn-error.log
 .env
+.env_vars
+*.DS_store
+dist
+node_modules
+yarn-error.log
