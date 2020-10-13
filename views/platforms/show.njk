@@ -1,0 +1,22 @@
+{% extends "layout/index.njk" %}
+
+{% block title %}
+  <title>GD: {{platform.name}}</title>
+{% endblock %}
+
+{% block content %}
+  <h1>{{platform.name}}</h1>
+  <img src="{{platform.platform_logo.url}}" alt="{{platform.name}}">
+  <ul>
+    {% for game in platform.games %}
+      <li>
+        {% if game.cover.url %}
+          <img src="{{game.cover.thumbnail}}" alt="{{game.name}} cover">
+        {% else %}
+          <img src="/assets/images/no-cover.png" alt="{{game.name}} cover">
+        {% endif %}
+        <h3><a href="/games/{{game.slug}}">{{game.name}}</a></h3>
+      </li>
+    {% endfor %}
+  </ul>
+{% endblock %}

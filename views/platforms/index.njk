@@ -1,0 +1,15 @@
+{% extends "layout/index.njk" %}
+
+{% block title %}
+  <title>GD: Platforms</title>
+{% endblock %}
+
+{% block content %}
+  <h1>Platforms</h1>
+
+  {% for platform in platforms %}
+    <h2>{{platform.name}}</h2>
+    <img src="{{platform.platform_logo.url}}" alt="{{platform.name}}">
+    <a href="/platforms/{{platform.slug}}">See More</a>
+  {% endfor %}
+{% endblock %}
