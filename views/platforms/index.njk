@@ -4,12 +4,24 @@
   <title>GD: Platforms</title>
 {% endblock %}
 
+{% block css %}
+  <link rel="stylesheet" href="/assets/styles/platforms.css">
+{% endblock %}
+
 {% block content %}
   <h1>Platforms</h1>
-
-  {% for platform in platforms %}
-    <h2>{{platform.name}}</h2>
-    <img src="{{platform.platform_logo.url}}" alt="{{platform.name}}">
-    <a href="/platforms/{{platform.slug}}">See More</a>
-  {% endfor %}
+  <div class="platforms-list row">
+    {% for platform in platforms %}
+      <div class="col-12 col-sm-6 col-md-4">
+        <div class="card">
+          <img src="{{platform.platform_logo.url}}" class="card-img-top" alt="...">
+          <div class="card-body">
+            <h5 class="card-title">{{platform.name}}</h5>
+            <p class="card-text partial-text">{{platform.summary}}</p>
+            <a href="/platforms/{{platform.slug}}" class="btn btn-primary">Go somewhere</a>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
 {% endblock %}

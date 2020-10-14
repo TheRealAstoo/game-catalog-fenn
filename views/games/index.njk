@@ -5,15 +5,21 @@
 {% endblock %}
 
 {% block css %}
+  <link rel="stylesheet" href="assets/styles/games.css">
 {% endblock %}
 
 {% block content %}
   <h1>Games</h1>
-  <ul>
+  <ul class="list-group">
     {% for game in games %}
-      <li>
-        <img src="{{game.cover.thumbnail}}" alt="{{game.name}} cover">
+      <li class="list-group-item d-flex position-relative">
+        <img src="{{game.cover.thumbnail}}" alt="{{game.name}} cover" class="mr-2">
         <h3><a href="/games/{{game.slug}}">{{game.name}}</a></h3>
+        <div class="game-availability position-absolute">
+          {% for platform in game.platforms %}
+            <img src="{{platform.platform_logo.url}}" height="40px" width="40px" class="ml-2">
+          {% endfor %}
+        </div>
       </li>
     {% endfor %}
   </ul>
