@@ -8,7 +8,8 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "sourceMap": true,
-    "strict": true
+    "strict": true,
+    "esModuleInterop": true
   },
   "include": ["**/*"],
   "exclude": ["./build", "node_modules"]

@@ -1,4 +1,4 @@
-import * as express from "express";
+import express from "express";
 import GameModel from "../models/gameModel";
 
 const clientWantsJson = (request: express.Request): boolean => request.get("accept") === "application/json";

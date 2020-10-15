@@ -1,30 +1,29 @@
 import { Db } from "mongodb";
 import * as core from "express-serve-static-core";
-import * as dotenv from "dotenv";
-import * as express from "express";
+import express from "express";
 import * as gamesController from "./controllers/games.controller";
 import * as nunjucks from "nunjucks";
 import * as platformsController from "./controllers/platforms.controller";
 import GameModel, { Game } from "./models/gameModel";
-import initDb from "../utils/initDatabase";
 import PlatformModel, { Platform } from "./models/platformModel";
-
-dotenv.config();
-
-const app = express();
-
-app.use("/assets", express.static("public"));
-
-nunjucks.configure("views", {
-  autoescape: true,
-  express: app,
-});
-
-app.set("view engine", "njk");
+import bodyParser from "body-parser";
 
 const clientWantsJson = (request: express.Request): boolean => request.get("accept") === "application/json";
 
-function makeApp(db: Db): core.Express {
+const formParser = bodyParser.urlencoded({ extended: true });
+const jsonParser = bodyParser.json();
+
+export function makeApp(db: Db): core.Express {
+  const app = express();
+
+  nunjucks.configure("views", {
+    autoescape: true,
+    express: app,
+  });
+
+  app.use("/assets", express.static("public"));
+  app.set("view engine", "njk");
+
   const platformModel = new PlatformModel(db.collection<Platform>("platforms"));
   const gameModel = new GameModel(db.collection<Game>("games"));
 
@@ -34,6 +33,8 @@ function makeApp(db: Db): core.Express {
   app.get("/platforms", platformsController.index(platformModel));
   // GET platforms/:slug
   app.get("/platforms/:slug", platformsController.show(platformModel));
+  // POST platforms
+  app.post("/platforms", jsonParser, formParser, platformsController.create(platformModel));
 
   // GET games
   app.get("/games", gamesController.index(gameModel));
@@ -50,13 +51,3 @@ function makeApp(db: Db): core.Express {
 
   return app;
 }
-
-initDb()
-  .then(async (client) => {
-    const app = makeApp(client.db());
-
-    app.listen(process.env.PORT, () => {
-      console.log(`listen on http://localhost:${process.env.PORT}`);
-    });
-  })
-  .catch(console.error);

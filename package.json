@@ -61,7 +61,8 @@
     },
     "ignorePatterns": [
       "node_modules/",
-      "*.test.ts"
+      "*.test.ts",
+      "dist"
     ],
     "rules": {
       "@typescript-eslint/explicit-function-return-type": 1,

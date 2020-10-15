@@ -33,3 +33,15 @@ export function show(platformModel: PlatformModel) {
     }
   };
 }
+
+export function create(platformModel: PlatformModel) {
+  return async (request: Request, response: Response): Promise<void> => {
+    const errors = platformModel.validate(request.body as Partial<PlatformModel>);
+    if (errors.length > 0) {
+      response.status(400).json({ errors });
+    } else {
+      const game = await platformModel.insertOne(request.body);
+      response.status(201).json(game);
+    }
+  };
+}

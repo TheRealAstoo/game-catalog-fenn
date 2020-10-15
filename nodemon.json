@@ -2,5 +2,5 @@
   "watch": ["src/", "index.ts", "public", "views"],
   "ext": "*",
   "ignore": [],
-  "exec": "ts-node src/server.ts"
+  "exec": "ts-node src/index.ts"
 }
