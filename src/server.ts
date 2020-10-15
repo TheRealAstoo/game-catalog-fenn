@@ -10,7 +10,6 @@ import bodyParser from "body-parser";
 
 const clientWantsJson = (request: express.Request): boolean => request.get("accept") === "application/json";
 
-const formParser = bodyParser.urlencoded({ extended: true });
 const jsonParser = bodyParser.json();
 
 export function makeApp(db: Db): core.Express {
@@ -29,17 +28,18 @@ export function makeApp(db: Db): core.Express {
 
   app.get("/", (_request, response) => response.render("pages/home"));
 
-  // GET platforms
   app.get("/platforms", platformsController.index(platformModel));
-  // GET platforms/:slug
   app.get("/platforms/:slug", platformsController.show(platformModel));
-  // POST platforms
-  app.post("/platforms", jsonParser, formParser, platformsController.create(platformModel));
+  app.post("/platforms", jsonParser, platformsController.create(platformModel));
+  app.put("/platforms/:slug", jsonParser, platformsController.update(platformModel));
+  app.delete("/platforms/:slug", jsonParser, platformsController.destroy(platformModel));
 
-  // GET games
+  app.get("/platforms/:slug/games", gamesController.list(gameModel));
   app.get("/games", gamesController.index(gameModel));
-  // GET platforms/:slug
   app.get("/games/:slug", gamesController.show(gameModel));
+  app.post("/games", jsonParser, gamesController.create(gameModel, platformModel));
+  app.put("/games/:slug", jsonParser, gamesController.update(gameModel));
+  app.delete("/games/:slug", jsonParser, gamesController.destroy(gameModel));
 
   app.get("/*", (request, response) => {
     if (clientWantsJson(request)) {

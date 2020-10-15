@@ -1,10 +1,10 @@
 import { Collection, ObjectId } from "mongodb";
 
 type PlatformInput = {
-  code: number;
-  connectivity: string;
-  cpu: string;
-  games: {
+  code?: number;
+  connectivity?: string;
+  cpu?: string;
+  games?: {
     cover: {
       thumbnail: string;
       url: string;
@@ -12,25 +12,25 @@ type PlatformInput = {
     name: string;
     slug: string;
   }[];
-  graphics: string;
-  media: string;
-  memory: string;
+  graphics?: string;
+  media?: string;
+  memory?: string;
   name: string;
-  online: string;
-  os: string;
-  output: string;
+  online?: string;
+  os?: string;
+  output?: string;
   platform_logo: {
     height: number;
     url: string;
     width: number;
   };
-  platform_version_release_date: string;
-  resolutions: string;
+  platform_version_release_date?: string;
+  resolutions?: string;
   slug: string;
-  sound: string;
-  storage: string;
-  summary: string;
-  url: string;
+  sound?: string;
+  storage?: string;
+  summary?: string;
+  url?: string;
 };
 
 export type Platform = PlatformInput & {
@@ -48,7 +48,7 @@ export default class PlatformModel {
     return this.collection.find({}).toArray();
   }
 
-  findById(id: string): Promise<Platform | null> {
+  findById(id: ObjectId): Promise<Platform | null> {
     return this.collection.findOne({
       _id: id,
     });
@@ -69,49 +69,30 @@ export default class PlatformModel {
     return ops[0];
   }
 
-  validate(payload: Partial<PlatformInput & Record<string, unknown>>): string[] {
+  async updateOne(id: ObjectId, payload: Platform): Promise<Platform> {
+    const dbResponse = await this.collection.replaceOne({ _id: id }, payload);
+    const { ops } = dbResponse;
+    return ops[0];
+  }
+
+  async remove(id: ObjectId): Promise<void> {
+    await this.collection.deleteOne({ _id: id });
+  }
+
+  validate(payload: Record<string, unknown>): string[] {
     const errors: string[] = [];
 
-    const platformInput: Partial<PlatformInput> & Record<string, unknown> = {
-      games: [],
-    };
-
-    const mandatoryKeys = [
-      "code",
-      "connectivity",
-      "cpu",
-      "graphics",
-      "media",
-      "memory",
-      "name",
-      "online",
-      "os",
-      "output",
-      "platform_version_release_date",
-      "resolutions",
-      "slug",
-      "sound",
-      "storage",
-      "summary",
-      "url",
-    ];
+    const mandatoryKeys = ["name", "slug", "summary"];
 
     mandatoryKeys.forEach((key) => {
       if (!payload[key]) {
         errors.push(`Field '${key}' must be present.`);
-      } else {
-        platformInput[key] = payload[key];
       }
     });
 
-    if (
-      (payload.platform_logo &&
-        !payload.platform_logo.height &&
-        !payload.platform_logo.width &&
-        !payload.platform_logo.url) ||
-      !payload.platform_logo
-    ) {
-      errors.push("Field 'platform_logo' must be present.");
+    const platformLogo = payload.platform_logo as { width: number; height: number; url: string };
+    if ((platformLogo && !platformLogo.height && !platformLogo.width && !platformLogo.url) || !payload.platform_logo) {
+      errors.push("Field 'platform_logo' must be present with width, height and url.");
     }
 
     return errors;

@@ -20,13 +20,15 @@
     "mongodb": "^3.6.2",
     "node-fetch": "^2.6.0",
     "nodemon": "^2.0.4",
-    "nunjucks": "^3.2.2"
+    "nunjucks": "^3.2.2",
+    "slug": "^3.5.1"
   },
   "devDependencies": {
     "@types/jest": "^25.1.4",
     "@types/mongodb": "^3.5.27",
     "@types/node": "^13.11.1",
     "@types/node-fetch": "^2.5.5",
+    "@types/slug": "^0.9.1",
     "@typescript-eslint/eslint-plugin": "^2.24.0",
     "@typescript-eslint/parser": "^2.24.0",
     "eslint": "^6.8.0",
